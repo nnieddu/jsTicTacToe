@@ -1,7 +1,5 @@
 "use strict";
 
-var themeChoosen = 0;
-
 window.onload = (event) => {
   const modal = document.getElementById("modal");
 };
@@ -154,7 +152,7 @@ function iaMove(playerChoise) {
   else ia = "O";
 
   let timeoutNbr = 0;
-  while (timeoutNbr < 8) {
+  while (timeoutNbr < 50) {
     let x = Math.floor(Math.random() * 9);
     var btn = "_" + x + "_btn";
     timeoutNbr++;
@@ -179,7 +177,7 @@ function gamePlay(playerChoise) {
     var aiPlayer;
     var player;
     var isFinish = 0;
-    var maxMoove;
+    var maxMoove = 5;
 
     if (e.target.innerText == "X" || e.target.innerText == "O") return;
     clickShort.play();
@@ -253,19 +251,24 @@ OnEvent(document).on("click", "#theme-change-btn", function (e) {
   if (!themeChoosen) {
     document.documentElement.style.setProperty("--button-color", "#317AC1");
     document.documentElement.style.setProperty("--button-color-hover", "#398bdd");
+
     document.documentElement.style.setProperty("--main-bg-color", "#D4D3DC");
     document.documentElement.style.setProperty("--main-police", "#384454");
+
     document.documentElement.style.setProperty("--modal-bg-color", "#384454");
     document.documentElement.style.setProperty("--modal-police-color", "#D4D3DC");
     document.documentElement.style.setProperty("--close-modal-button", "#D4D3DC");
+
     themeChoosen = 1;
     cleanBoardColor();
     return;
   }
   document.documentElement.style.setProperty("--button-color", "#4caf50");
   document.documentElement.style.setProperty("--button-color-hover", "#3e8e41");
+
   document.documentElement.style.setProperty("--main-bg-color", "#111111");
   document.documentElement.style.setProperty("--main-police", "#f8f8f8");
+
   document.documentElement.style.setProperty("--modal-bg-color", "#f8f8f8");
   document.documentElement.style.setProperty("--modal-police-color", "#111111");
   document.documentElement.style.setProperty("--close-modal-button", "#333");
@@ -289,5 +292,7 @@ OnEvent(document).on("click", ".choice-btn", function (e) {
   if (e.target.innerText == "X") return;
   else playerChoise = true;
 });
+
+var themeChoosen = 0;
 
 gamePlay(false);
