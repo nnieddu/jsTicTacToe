@@ -276,6 +276,13 @@ OnEvent(document).on("click", "#theme-change-btn", function (e) {
   cleanBoardColor();
 });
 
+OnEvent(document).on("click", "#crossButton", function (e) {
+  playerChoise = false;
+});
+OnEvent(document).on("click", "#circleButton", function (e) {
+  playerChoise = true;
+});
+
 OnEvent(document).on("click", ".choice-btn", function (e) {
   if (e.target.innerText == "Reset") {
     cleanBoard(false);
@@ -284,18 +291,16 @@ OnEvent(document).on("click", ".choice-btn", function (e) {
   }
   if (e.target.innerText == "Change team") {
     document.getElementById("gameGrid").style.visibility = "hidden";
-    document.getElementById("resetButton").style.visibility = "hidden";
-    document.getElementById("changeButton").style.visibility = "hidden";
+    resetButton.style.visibility = "hidden";
+    changeButton.style.visibility = "hidden";
     document.getElementById("infos-display").style.visibility = "visible";
     document.getElementById("infos-display").style.position = "unset";
     cleanBoard(false);
     return;
   }
   document.getElementById("gameGrid").style.visibility = "visible";
-  document.getElementById("resetButton").style.visibility = "visible";
-  document.getElementById("changeButton").style.visibility = "visible";
+  resetButton.style.visibility = "visible";
+  changeButton.style.visibility = "visible";
   document.getElementById("infos-display").style.visibility = "hidden";
   document.getElementById("infos-display").style.position = "absolute";
-  if (e.target.innerText == "X") return;
-  else playerChoise = true;
 });
