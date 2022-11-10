@@ -1,5 +1,11 @@
 "use strict";
 
+var playerChoise = false;
+var playerTurn = 0;
+var audio;
+var clickShort = new Audio("/medias/ui-clickShort.mp3");
+var themeChoosen = 0;
+
 window.onload = (event) => {
   const modal = document.getElementById("modal");
 };
@@ -41,7 +47,7 @@ function cleanBoardColor() {
   }
 }
 
-function cleanBoard() {
+function cleanBoard(endOfGame) {
   _0_btn.innerHTML = "&nbsp;&nbsp;";
   _1_btn.innerHTML = "&nbsp;&nbsp;";
   _2_btn.innerHTML = "&nbsp;&nbsp;";
@@ -52,7 +58,7 @@ function cleanBoard() {
   _7_btn.innerHTML = "&nbsp;&nbsp;";
   _8_btn.innerHTML = "&nbsp;&nbsp;";
   cleanBoardColor();
-  closeModal();
+  if (endOfGame) closeModal();
 }
 
 function checkWin(playerChoise) {
@@ -152,7 +158,7 @@ function iaMove(playerChoise) {
   else ia = "O";
 
   let timeoutNbr = 0;
-  while (timeoutNbr < 50) {
+  while (timeoutNbr < 250) {
     let x = Math.floor(Math.random() * 9);
     var btn = "_" + x + "_btn";
     timeoutNbr++;
@@ -166,70 +172,6 @@ function iaMove(playerChoise) {
       break;
     }
   }
-}
-
-function gamePlay(playerChoise) {
-  var playerTurn = 0;
-  var audio;
-  var clickShort = new Audio("/medias/ui-clickShort.mp3");
-
-  OnEvent(document).on("click", ".game-btn", function (e) {
-    var aiPlayer;
-    var player;
-    var isFinish = 0;
-    var maxMoove = 5;
-
-    if (e.target.innerText == "X" || e.target.innerText == "O") return;
-    clickShort.play();
-    if (!playerChoise) {
-      player = "X";
-      aiPlayer = "O";
-    } else {
-      player = "O";
-      aiPlayer = "X";
-    }
-    if (playerTurn < maxMoove) {
-      document.getElementById(e.target.id).innerText = player;
-      playerTurn++;
-      if (checkWin(player)) {
-        isFinish = 1;
-        audio = new Audio("/medias/victory.mp3");
-        audio.play();
-        openModal("Bravo ! C'est gagné :)");
-        var delayInMilliseconds = 2500;
-        setTimeout(function () {
-          cleanBoard();
-          playerTurn = 0;
-        }, delayInMilliseconds);
-        return;
-      }
-      iaMove(playerChoise);
-      if (checkWin(aiPlayer)) {
-        isFinish = 1;
-        audio = new Audio("/medias/loose-arcade.mp3");
-        audio.play();
-        openModal("Aie ! C'est perdu..");
-        var delayInMilliseconds = 2500;
-        setTimeout(function () {
-          cleanBoard();
-          playerTurn = 0;
-        }, delayInMilliseconds);
-        return;
-      }
-      if (playerTurn == 5) {
-        isFinish = 1;
-        audio = new Audio("/medias/hit.mp3");
-        audio.play();
-        openModal("Egalité !");
-        var delayInMilliseconds = 2500;
-        setTimeout(function () {
-          cleanBoard();
-          playerTurn = 0;
-        }, delayInMilliseconds);
-        return;
-      }
-    }
-  });
 }
 
 const OnEvent = (doc) => {
@@ -246,6 +188,64 @@ const OnEvent = (doc) => {
     },
   };
 };
+
+OnEvent(document).on("click", ".game-btn", function (e) {
+  var aiPlayer;
+  var player;
+  var isFinish = 0;
+  var maxMoove = 5;
+
+  if (e.target.innerText == "X" || e.target.innerText == "O") return;
+  clickShort.play();
+  if (!playerChoise) {
+    player = "X";
+    aiPlayer = "O";
+  } else {
+    player = "O";
+    aiPlayer = "X";
+  }
+  if (playerTurn < maxMoove) {
+    document.getElementById(e.target.id).innerText = player;
+    playerTurn++;
+    if (checkWin(player)) {
+      isFinish = 1;
+      audio = new Audio("/medias/victory.mp3");
+      audio.play();
+      openModal("Bravo ! C'est gagné :)");
+      var delayInMilliseconds = 2500;
+      setTimeout(function () {
+        cleanBoard(true);
+        playerTurn = 0;
+      }, delayInMilliseconds);
+      return;
+    }
+    iaMove(playerChoise);
+    if (checkWin(aiPlayer)) {
+      isFinish = 1;
+      audio = new Audio("/medias/loose-arcade.mp3");
+      audio.play();
+      openModal("Aie ! C'est perdu..");
+      var delayInMilliseconds = 2500;
+      setTimeout(function () {
+        cleanBoard(true);
+        playerTurn = 0;
+      }, delayInMilliseconds);
+      return;
+    }
+    if (playerTurn == 5) {
+      isFinish = 1;
+      audio = new Audio("/medias/hit.mp3");
+      audio.play();
+      openModal("Egalité !");
+      var delayInMilliseconds = 2500;
+      setTimeout(function () {
+        cleanBoard(true);
+        playerTurn = 0;
+      }, delayInMilliseconds);
+      return;
+    }
+  }
+});
 
 OnEvent(document).on("click", "#theme-change-btn", function (e) {
   if (!themeChoosen) {
@@ -278,21 +278,24 @@ OnEvent(document).on("click", "#theme-change-btn", function (e) {
 
 OnEvent(document).on("click", ".choice-btn", function (e) {
   if (e.target.innerText == "Reset") {
-    cleanBoard();
+    cleanBoard(false);
     playerTurn = 0;
     return;
   }
   if (e.target.innerText == "Change team") {
-    location.reload();
+    document.getElementById("gameGrid").style.visibility = "hidden";
+    document.getElementById("resetButton").style.visibility = "hidden";
+    document.getElementById("changeButton").style.visibility = "hidden";
+    document.getElementById("infos-display").style.visibility = "visible";
+    document.getElementById("infos-display").style.position = "unset";
+    cleanBoard(false);
+    return;
   }
   document.getElementById("gameGrid").style.visibility = "visible";
   document.getElementById("resetButton").style.visibility = "visible";
   document.getElementById("changeButton").style.visibility = "visible";
-  document.getElementById("infos-display").remove();
+  document.getElementById("infos-display").style.visibility = "hidden";
+  document.getElementById("infos-display").style.position = "absolute";
   if (e.target.innerText == "X") return;
   else playerChoise = true;
 });
-
-var themeChoosen = 0;
-
-gamePlay(false);
