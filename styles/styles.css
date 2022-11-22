@@ -15,28 +15,24 @@
 		--cool:#398bdd;
 }
 
-html {
-  /* IE 10-11 didn't like using min-height */
-  height: 100%;
+html {  height: 100%;
+  width: 100%;
 }
-
 body {
   -moz-user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
   user-select: none;
-
   margin: 0;
   padding: 0;
   font-family: sans-serif;
   background: var(--main-bg-color);
   color: var(--main-police-color);
   text-align: center;
-
 	display: flex;
   flex-direction: column;
-
   height: 100%;
+  width: 100%;
 }
 
 nav {
@@ -68,6 +64,10 @@ nav a:hover{
 }
 
 footer {
+  position: relative;
+  bottom: 0;
+  left: 0;
+
 	height: 50px;
 	flex-shrink: 0;
   background: linear-gradient(-180deg, var(--gradient-1), var(--gradient-2));
